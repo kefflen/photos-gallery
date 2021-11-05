@@ -5,14 +5,14 @@ import { Photo } from './types/Photo'
 
 
 export default function App() {
-  const [photoList, setPhotoList] = useState<Photo[]>([])
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const getPhotos = async () => {
       setLoading(true)
       const photos = await PhotosServices.getAll()
-      setPhotoList(photos)
+      setPhotos(photos)
       setLoading(false)
     }
     getPhotos()
@@ -22,7 +22,19 @@ export default function App() {
     <C.Container>
       <C.Area>
         <C.Header>Galeria de fotos</C.Header>
-        
+        {loading? (
+          <C.ScreenWarning>
+            <div className="emoji">✋</div>
+            <div>Carregando</div>
+          </C.ScreenWarning>
+        ) : (
+          <C.PhotoList>
+            {photos.map((item, index) => (
+              <div key={index}>{item.name}</div>
+            ))
+            }
+          </C.PhotoList>
+        )}
       </C.Area>
     </C.Container>
   )
