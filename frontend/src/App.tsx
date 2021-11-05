@@ -18,6 +18,15 @@ export default function App() {
     getPhotos()
   }, [])
 
+  function renderPhotoList() {
+    if (photos.length > 0) {
+      return photos.map((item, index) => (
+        <div key={index}>{item.name}</div>
+      ))
+    } else {
+      return <div>Não tem photos cadastradas 😔</div>
+    }
+  }
   return (
     <C.Container>
       <C.Area>
@@ -29,10 +38,7 @@ export default function App() {
           </C.ScreenWarning>
         ) : (
           <C.PhotoList>
-            {photos.map((item, index) => (
-              <div key={index}>{item.name}</div>
-            ))
-            }
+            {renderPhotoList()}
           </C.PhotoList>
         )}
       </C.Area>
