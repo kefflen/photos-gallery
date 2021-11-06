@@ -2,7 +2,7 @@
 import { Knex } from 'knex'
 import path from 'path'
 
-module.exports = {
+export default {
   client: 'sqlite3',
   connection: {
     filename: path.resolve('src/database/dev.sqlite3'),

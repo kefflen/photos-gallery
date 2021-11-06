@@ -2,3 +2,5 @@ node_modules
 **/dev.sqlite3
 .env
 .env.local
+uploads/**
+!**/.gitkeep
