@@ -1,5 +1,5 @@
 import { SaveImageController } from "../../controller/SaveImageController";
-import { SaveImageUseCase } from "../../use-cases/SaveImageUseCase";
+import { SaveImageUseCase } from "../../use-cases";
 
 export function saveImageControllerFactory() {
   const saveImageUseCase = new SaveImageUseCase()

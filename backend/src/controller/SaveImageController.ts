@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { SaveImageUseCase } from '../use-cases/SaveImageUseCase'
+import { SaveImageUseCase } from '../use-cases'
 
 export class SaveImageController {
   constructor(
@@ -16,6 +16,7 @@ export class SaveImageController {
       const data = await this.saveImageUseCase.execute(name, path)
       return response.status(201).json(data)
     } catch (err) {
+      console.log(err)
       return response.status(500).json({message: 'Unknow error'})
     }
   }

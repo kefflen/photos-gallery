@@ -11,7 +11,6 @@ const storage = multer.diskStorage({
   filename: function(req, file, cb) {
     let { originalname } = file
     let filename = `${Date.now()} - ${originalname}`
-    console.log({filename})
     let resolvedFilename = resolveFileName(filename)
     if (!resolvedFilename) return cb(new Error("File has a invalid format"), 'teste')
     return cb(null, resolvedFilename)

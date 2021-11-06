@@ -3,6 +3,9 @@ import { router } from './routes'
 
 const app = express()
 
-app.use('/', router)
+app.use('/uploads', express.static('./uploads'))
+app.use('/images', router)
+
+
 
 export default app
