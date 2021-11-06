@@ -1,13 +1,25 @@
+import { Request } from 'express'
 import multer from 'multer'
 
-//Para pegar o path do aquivo: req.file.path
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './uploads')
   },
   filename: function(req, file, cb) {
-    cb(null, file.originalname)
+    let { originalname } = file
+    let createdAt = Date.now()
+    let randomNumber = Math.round(Math.random() * 10000)
+    cb(null, `${createdAt}-${randomNumber}-${originalname}`)
   }
 })
 
-export const uploadImg = multer({storage}).single('image')
+function fileFilter (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) {
+  if (['image/jpeg', 'image/jpg', 'image/png'].includes(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(null, false)
+  }
+}
+
+export const uploadImg = multer({storage, fileFilter}).single('image')
