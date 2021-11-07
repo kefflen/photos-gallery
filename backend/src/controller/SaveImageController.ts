@@ -1,23 +1,44 @@
 import { Request, Response } from 'express'
 import { SaveImageUseCase } from '../use-cases'
+import fs from 'fs'
+import { BadRequestValidator } from '../helpers/Validator'
+import { AppError } from '../helpers/errors'
+
+type ErrorHttpResponse = {
+  statusCode: number,
+  body: {
+    [key: string]: string|string[]
+  }
+}
 
 export class SaveImageController {
   constructor(
     private readonly saveImageUseCase: SaveImageUseCase
   ) {}
 
+
   handle = async (request: Request, response: Response) => {
+    let path
     try {
-      console.log(request.body)
+      const validator = new BadRequestValidator()
       const { name } = request.body
-      const path = request.file?.path
-      if (!name) return response.status(400).json({message: "Should pass name to request body"})
-      if (!path) return response.status(400).json({message: "Should pass a valid image to request body"})
-      const data = await this.saveImageUseCase.execute(name, path)
+      path = request.file?.path
+      validator.itsNotUndefined(name, "Should pass name to request body")
+      validator.itsNotUndefined(path, "Should pass a valid image to request body")
+      let error = validator.verifyAsserts()
+      if (error) {
+        throw error
+      }
+      const data = await this.saveImageUseCase.execute(name, path as string)
       return response.status(201).json(data)
     } catch (err) {
       console.log(err)
-      return response.status(500).json({message: 'Unknow error'})
+      let httpReponse: ErrorHttpResponse = {statusCode: 500, body: {message: "Unknow error"}}
+      if (err instanceof AppError) {
+        httpReponse = {statusCode: err.statusCode, body: { messages: err.body} }
+      }
+      if (path) fs.unlinkSync(path)
+      return response.status(httpReponse.statusCode).json(httpReponse.body)
     }
   }
 }
